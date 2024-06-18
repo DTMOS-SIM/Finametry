@@ -15,6 +15,7 @@ public:
 };
 
 //this function return the year franction between 2 date object
+Date operator+(const Date& d, double yearFrac);
 double operator-(const Date& d1, const Date& d2);
 bool operator>(const Date& d1, const Date& d2);
 bool operator<(const Date& d1, const Date& d2);

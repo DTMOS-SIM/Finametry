@@ -11,9 +11,9 @@ using namespace std;
 class RateCurve {
 public:
   RateCurve(){};
-  RateCurve(const string& _name): name(_name) {} ; 
-  void addRate(Date tenor, double rate);
+  RateCurve(const string& _name): name(_name) {} ;
   void shock(Date tenor, double value); //implement this
+  void addRate(Date tenor, double rate);
   double getRate(Date tenor) const; //implement this function using linear interpolation
   double getDf(Date _date) const; // using df = exp(-rt), and r is getRate function
   void display() const;
@@ -29,11 +29,12 @@ private:
 class VolCurve { // atm vol curve without smile
 public:
   VolCurve(){}
-  VolCurve(const string& _name): name(_name) {} ; 
-  void addVol(Date tenor, double rate); //implement this
+  VolCurve(const string& _name): name(_name) {} ;
+  void shock(Date tenor, double value); //implement this
+  void addVol(const Date& tenor,const double& rate); // implement this
   double getVol(Date tenor) const; //implement this function using linear interpolation
   void display() const; //implement this
-  void shock(Date tenor, double value); //implement this
+
   
   string name;
   Date _asOf;
@@ -59,20 +60,29 @@ public:
   } //implement this
 
   void Print() const;
-  void addCurve(const std::string& curveName, const RateCurve& curve);//implement this
-  void addVolCurve(const std::string& curveName, const VolCurve& curve);//implement this
-  void addBondPrice(const std::string& bondName, double price);//implement this
-  void addVolCurve(const std::string& stockName, double price);//implement this
+  void addCurve_1(const std::string& curveName, const RateCurve& curve);//implement this
+  void addCurve_2(const std::string& curveName, const RateCurve& curve);//implement this
+  void addVolCurve_1(const std::string& curveName, const VolCurve& curve);//implement this
+  void addVolCurve_2(const std::string& curveName, const VolCurve& curve);//implement this
+  // void addBondPrice(const std::string& bondName, double price);//implement this
+  void addStockPrice_1(const std::string& stockName, double price);//implement this
+  void addStockPrice_2(const std::string& stockName, double price);//implement this
+  double getMarketPrice() const;
   
-  inline RateCurve getCurve(const string& name) { return curves[name]; };
-  inline VolCurve getVolCurve(const string& name) { return vols[name]; };
+    inline RateCurve getCurve(const string& name) const { return curves_1.at(name); };
+    inline VolCurve getVolCurve(const string& name) const { return vols_1.at(name); };
+    inline double getStockPrice(const string& name) const { return stockPrices_1.at(name); };
+    // inline double getBondPrice(const string& name) const { return bondPrices_1.at(name); };
 
 private:
-  
-  unordered_map<string, VolCurve> vols;
-  unordered_map<string, RateCurve> curves;
-  unordered_map<string, double> bondPrices;
-  unordered_map<string, double> stockPrices;
+
+  unordered_map<string, RateCurve> curves_1;
+  unordered_map<string, RateCurve> curves_2;
+  unordered_map<string, VolCurve> vols_1;
+  unordered_map<string, VolCurve> vols_2;
+  // unordered_map<string, double> bondPrices;
+  unordered_map<string, double> stockPrices_1;
+  unordered_map<string, double> stockPrices_2;
 };
 
 std::ostream& operator<<(std::ostream& os, const Market& obj);
