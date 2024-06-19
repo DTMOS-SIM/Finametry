@@ -73,12 +73,108 @@ int main()
   Date valueDate;
   valueDate.year = now_->tm_year + 1900;
   valueDate.month = now_->tm_mon + 1;
-  valueDate.year = now_->tm_mday;
+  valueDate.day = now_->tm_mday;
 
   Market mkt = Market(valueDate);
-  /*
-  load data from file and update market object with data
-  */
+
+
+    string basePath = "../market_data/";
+
+    // // Read and add bond prices
+    // string bondname;
+    // std::string bondPricePath = basePath + "usd_sofr_20240601.txt";
+    // vector< pair<string, double> >bondData;
+    //
+    // readFromFile(bondPricePath,bondname, bondData);
+    // for (auto& bondPrice : bondData) {
+    //     mkt.addBondPrice(bondPrice.first, bondPrice.second);
+    // }
+
+
+
+    // Read and add stock prices
+    string stockname_1;
+    std::string stockPricePath_1 = basePath + "stock_price_20240601.txt";
+    vector< pair<string, double> >stockData_1;
+
+    readFromFile(stockPricePath_1,stockname_1, stockData_1);
+    for (auto& stockPrice : stockData_1) {
+        mkt.addStockPrice_1(stockPrice.first, stockPrice.second);
+    }
+
+    // Read and add stock prices
+    string stockname_2;
+    std::string stockPricePath_2 = basePath + "stock_price_20240602.txt";
+    vector< pair<string, double> >stockData_2;
+
+    readFromFile(stockPricePath_2,stockname_2, stockData_2);
+    for (auto& stockPrice : stockData_2) {
+        mkt.addStockPrice_2(stockPrice.first, stockPrice.second);
+    }
+
+
+
+
+    // Read and add volatility data
+    string volname_1;
+    std::string volPath_1 = basePath + "vol_20240601.txt";
+    vector< pair<string, double> >volData_1;
+
+    readFromFile(volPath_1,volname_1, volData_1);
+    if (volname_1.empty()) {
+        volname_1 = "ATM-Vol";
+    }
+    VolCurve volCurve_1(volname_1);
+    for (auto& tenorVol : volData_1) {
+        volCurve_1.addVol(valueDate + stod(tenorVol.first), tenorVol.second);
+    }
+    mkt.addVolCurve_1(volname_1, volCurve_1);
+
+    // Read and add volatility data
+    string volname_2;
+    std::string volPath_2 = basePath + "vol_20240602.txt";
+    vector< pair<string, double> >volData_2;
+
+    readFromFile(volPath_2,volname_2, volData_2);
+    if (volname_2.empty()) {
+        volname_2 = "ATM-Vol";
+    }
+    VolCurve volCurve_2(volname_2);
+    for (auto& tenorVol : volData_2) {
+        volCurve_2.addVol(valueDate + stod(tenorVol.first), tenorVol.second);
+    }
+    mkt.addVolCurve_2(volname_2, volCurve_2);
+
+
+
+
+    // Read and add curve data
+    string curvename_1;
+    std::string curvePath_1 = basePath + "usd_sofr_20240601.txt";
+    vector< pair<string, double> >curveData_1;
+
+    readFromFile(curvePath_1,curvename_1, curveData_1);
+    RateCurve usdSofr_1(curvename_1);
+    for (auto& tenorRate : curveData_1) {
+        usdSofr_1.addRate(valueDate + stod(tenorRate.first), tenorRate.second);
+    }
+    mkt.addCurve_1(curvename_1, usdSofr_1);
+
+    // Read and add curve data
+    string curvename_2;
+    std::string curvePath_2 = basePath + "usd_sofr_20240602.txt";
+    vector< pair<string, double> >curveData_2;
+
+    readFromFile(curvePath_2,curvename_2, curveData_2);
+    RateCurve usdSofr_2(curvename_2);
+    for (auto& tenorRate : curveData_2) {
+        usdSofr_2.addRate(valueDate + stod(tenorRate.first), tenorRate.second);
+    }
+    mkt.addCurve_2(curvename_2, usdSofr_2);
+
+    
+
+    mkt.Print();
 
 
   //task 2, create a portfolio of bond, swap, european option, american option
