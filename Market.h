@@ -4,7 +4,10 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <memory>
 #include "Date.h"
+#include "Trade.h"
+#include "Types.h"
 
 using namespace std;
 
@@ -67,15 +70,17 @@ public:
   // void addBondPrice(const std::string& bondName, double price);//implement this
   void addStockPrice_1(const std::string& stockName, double price);//implement this
   void addStockPrice_2(const std::string& stockName, double price);//implement this
+  std::unique_ptr<Trade> addPortfolio(const std::string& line);
   double getMarketPrice() const;
   
-    inline RateCurve getCurve(const string& name) const { return curves_1.at(name); };
-    inline VolCurve getVolCurve(const string& name) const { return vols_1.at(name); };
-    inline double getStockPrice(const string& name) const { return stockPrices_1.at(name); };
-    // inline double getBondPrice(const string& name) const { return bondPrices_1.at(name); };
+  inline RateCurve getCurve(const string& name) const { return curves_1.at(name); };
+  inline VolCurve getVolCurve(const string& name) const { return vols_1.at(name); };
+  inline double getStockPrice(const string& name) const { return stockPrices_1.at(name); };
+  // inline double getBondPrice(const string& name) const { return bondPrices_1.at(name); };
 
 private:
 
+  OptionType optionTypeFromString(const std::string& optstr);
   unordered_map<string, RateCurve> curves_1;
   unordered_map<string, RateCurve> curves_2;
   unordered_map<string, VolCurve> vols_1;

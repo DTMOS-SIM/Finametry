@@ -9,9 +9,10 @@
 #include "Bond.h"
 #include "Swap.h"
 #include "AmericanTrade.h"
+#include "Factory.h"
 // blah
 
-#include "Factory.h"
+
 
 using namespace std;
 
@@ -77,8 +78,16 @@ int main()
 
   Market mkt = Market(valueDate);
 
+    std::string str = "2024-06-01";
+
+    Date testdate = stringToDate(str);
+    cout << testdate << endl;
 
     string basePath = "../market_data/";
+
+    // Read and add portfolio
+
+
 
     // // Read and add bond prices
     // string bondname;
@@ -89,6 +98,7 @@ int main()
     // for (auto& bondPrice : bondData) {
     //     mkt.addBondPrice(bondPrice.first, bondPrice.second);
     // }
+
 
 
 
@@ -111,8 +121,6 @@ int main()
     for (auto& stockPrice : stockData_2) {
         mkt.addStockPrice_2(stockPrice.first, stockPrice.second);
     }
-
-
 
 
     // Read and add volatility data
@@ -172,19 +180,40 @@ int main()
     }
     mkt.addCurve_2(curvename_2, usdSofr_2);
 
-    
-
     mkt.Print();
 
 
-  //task 2, create a portfolio of bond, swap, european option, american option
-  vector<std::unique_ptr<Trade>> myPortfolio;
+    //task 2, create a portfolio of bond, swap, european option, american option
+    vector<std::unique_ptr<Trade>> myPortfolio;
+    std::string portfolioPath = basePath + "portfolio.txt";
+    auto bFactory = std::make_unique<BondFactory>();
+    auto sFactory = std::make_unique<SwapFactory>();
+    auto eFactory = std::make_unique<EurOptFactory>();
+    auto aFactory = std::make_unique<AmericanOptFactory>();
+
+    std::ifstream file(portfolioPath)   ;
+    if (!file.is_open())
+    {
+        std::cerr << "Error: Unable to open file " << portfolioPath << std::endl;
+        return 0;
+    }
+
+    std::string line;
+    while (std::getline(file, line))
+    {
+        if (line.empty() || line[0] == '#' || line[0] == 'I') {
+                continue; // Skip comments or empty lines
+            }
+        cout << line << endl;
+        myPortfolio.push_back(std::move(mkt.addPortfolio(line)));
+        cout << "Added new trade from txt to myPortfolio trade vector" << endl;
+        cout << endl;
+    }
+    file.close();
+
   
-  auto bFactory = std::make_unique<BondFactory>();
-  auto sFactory = std::make_unique<SwapFactory>();
-  auto eFactory = std::make_unique<EurOptFactory>();
-  auto aFactory = std::make_unique<AmericanOptFactory>();
-  auto bond = bFactory->createTrade("usd-gov",Date(2024, 1, 1), Date(2034, 1, 1),1000000, 0.035, 0.6, OptionType::None);
+
+  auto bond= bFactory->createTrade("usd-gov",Date(2024, 1, 1), Date(2034, 1, 1),1000000, 0.035, 0.6, OptionType::None);
   auto swap = sFactory->createTrade("usd-sofr",Date(2024, 1, 1), Date(2034, 1, 1),-1000000, 0.03, 1.0, OptionType::None);
   auto eCall = eFactory->createTrade("appl", Date(2024, 1, 1), Date(2025, 1, 1), 10000, 530, 0,OptionType::Call);
   auto aPut = aFactory->createTrade("appl", Date(2024, 1, 1), Date(2026, 1, 1), 10000, 525, 0,OptionType::Put);
@@ -197,12 +226,12 @@ int main()
   //task 3, creat a pricer and price the portfolio, output the pricing result of each deal 
   //3.1 compute the NPV of deal as of market date 1
   //3.2 compute the NPV of deal as of market date 2, and then compute the daily Pnl for each deal uisng NPV(date2) - NPV (date1), and output the result in file
-  auto pricer = new CRRBinomialTreePricer(100);
-  for (size_t i = 0; i<myPortfolio.size(); i++) {
-    auto& trade = myPortfolio[i];
-    double pv = pricer->Price(mkt, std::move(trade));
-    //log pv details out in a file
-  }
+  // auto pricer = new CRRBinomialTreePricer(100);
+  // for (size_t i = 0; i<myPortfolio.size(); i++) {
+  //   auto& trade = myPortfolio[i];
+  //   double pv = pricer->Price(mkt, std::move(trade));
+  //   //log pv details out in a file
+  // }
 
   //task 4, compute the Greeks of DV01 [Vector], and Vega risk as of market date 1
   // 4.1 compute risk using risk engine

@@ -12,7 +12,8 @@ public:
         notional = _notional;
         tradeRate = _rate;
         frequency = _freq;
-        generateSwapSchedule();
+        // below function is causing infinite loop while adding trades to portfolio when uncommented
+        // generateSwapSchedule();
     }
     
     /*

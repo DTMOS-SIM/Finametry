@@ -15,11 +15,11 @@ add_executable(final_proj
         main.cpp
         Market.cpp
         Market.h
-        Payoff.h
         Pricer.cpp
         Pricer.h
         Swap.cpp
         Swap.h
         Trade.h
         TreeProduct.h
-        Types.h)
+        Types.h
+        Payoff.cpp)

@@ -1,4 +1,5 @@
 #include "Date.h"
+#include <sstream>
 
 //this function return the year franction between 2 date object
 
@@ -131,4 +132,35 @@ Date dateAddTenor(const Date& start, const string& tenorStr)
     throw std::runtime_error("Error: found unsupported tenor: "+ tenorStr);
   
   return newdate;
+}
+
+Date stringToDate(const std::string& DateStr)
+{
+  // cout << "triggered date conversion" << endl;
+  Date date;
+  std::stringstream ss(DateStr);
+  std::string token;
+  std::vector<std::string> tokens;
+
+  // Use getline with '-' as delimiter
+  while (std::getline(ss, token, '-')) {
+    tokens.push_back(token);
+  }
+
+  if (tokens.size() == 3)
+  {
+    date.year = stoi(tokens[0]);
+    date.month = stoi(tokens[1]);
+    date.day = stoi(tokens[2]);
+  } else
+  {
+    std::time_t t = std::time(nullptr);
+    auto now_ = std::localtime(&t);
+    date.year = now_->tm_year + 1900;
+    date.month = now_->tm_mon + 1;
+    date.day = now_->tm_mday;
+  }
+
+
+  return date;
 }

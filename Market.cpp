@@ -1,10 +1,14 @@
 #include "Market.h"
 
+#include <memory>
 #include <sstream>
 #include <iostream>
 #include <limits>
 #include <cmath>
 #include <algorithm>
+
+#include "Factory.h"
+
 
 using namespace std;
 
@@ -244,6 +248,63 @@ void Market::addStockPrice_1(const std::string& stockData, double price) {
 void Market::addStockPrice_2(const std::string& stockData, double price) {
   stockPrices_2.emplace(stockData, price);
 }
+
+std::unique_ptr<Trade> Market::addPortfolio(const std::string& line) {
+  std::istringstream iss(line);
+  std::string token;
+  int id;
+  std::string type, underlying, start, end, opt1;
+  double notional, freq, strike;
+
+  std::getline(iss, token, ';'); id = std::stoi(token);
+  std::getline(iss, type, ';');
+  std::getline(iss, underlying, ';');
+  std::getline(iss, start, ';');
+  std::getline(iss, end, ';');
+  std::getline(iss, token, ';'); if (token != "null") {notional = std::stod(token);}
+  std::getline(iss, token, ';'); if (token != "null") {freq = std::stod(token);}
+  std::getline(iss, token, ';'); if (token != "null") {strike = std::stod(token);}
+  std::getline(iss, opt1, ';');
+
+  Date startDate = stringToDate(start);
+  Date endDate = stringToDate(end);
+  OptionType opt = optionTypeFromString(opt1);
+
+  switch (type[0]) {
+      case 'b': // bond
+        return std::make_unique<BondFactory>()->createTrade(underlying, startDate, endDate, notional, strike, freq, (opt));
+      case 's': // swap
+        // cout << "added swap traded" << endl;
+        return std::make_unique<SwapFactory>()->createTrade(underlying, startDate, endDate, notional, strike, freq, (opt));
+      case 'e': // european option
+        return std::make_unique<EurOptFactory>()->createTrade(underlying, startDate, endDate, notional, strike, freq, (opt));
+      case 'a': // american option
+        return std::make_unique<AmericanOptFactory>()->createTrade(underlying, startDate, endDate, notional, strike, freq, (opt));
+      default:
+        std::cerr << "Error: Unknown trade type '" << type << "'" << std::endl;
+        return std::make_unique<AmericanOptFactory>()->createTrade("", Date(0,0,0), Date(0,0,0), 0, 0, 0.0, OptionType::None);
+  }
+
+}
+
+OptionType Market::optionTypeFromString(const std::string& optStr) {
+  // Convert optStr to lowercase for case-insensitive comparison
+  std::string optLower = optStr;
+  std::transform(optLower.begin(), optLower.end(), optLower.begin(), ::tolower);
+
+  if (optLower == "call") {
+    return OptionType::Call;
+  } else if (optLower == "put") {
+    return OptionType::Put;
+  } else if (optLower == "binarycall") {
+    return OptionType::BinaryCall;
+  } else if (optLower == "binaryput") {
+    return OptionType::BinaryPut;
+  } else {
+    return OptionType::None;
+  }
+}
+
 
 std::ostream& operator<<(std::ostream& os, const Market& mkt)
 {
