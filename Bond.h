@@ -8,6 +8,8 @@ public:
         notional = _notional;
         frequency = freq;
         coupon = rate;
+        startDate = start;
+        maturityDate = end;
     }
     double Payoff(double s) const; // implement this
     double Pv(const Market& mkt) const; // implement this

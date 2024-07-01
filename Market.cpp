@@ -272,17 +272,17 @@ std::unique_ptr<Trade> Market::addPortfolio(const std::string& line) {
 
   switch (type[0]) {
       case 'b': // bond
-        return std::make_unique<BondFactory>()->createTrade(underlying, startDate, endDate, notional, strike, freq, (opt));
+        return BondFactory().createTrade(underlying, startDate, endDate, notional, strike, freq, (opt));
       case 's': // swap
         // cout << "added swap traded" << endl;
-        return std::make_unique<SwapFactory>()->createTrade(underlying, startDate, endDate, notional, strike, freq, (opt));
+        return SwapFactory().createTrade(underlying, startDate, endDate, notional, strike, freq, (opt));
       case 'e': // european option
-        return std::make_unique<EurOptFactory>()->createTrade(underlying, startDate, endDate, notional, strike, freq, (opt));
+        return EurOptFactory().createTrade(underlying, startDate, endDate, notional, strike, freq, (opt));
       case 'a': // american option
-        return std::make_unique<AmericanOptFactory>()->createTrade(underlying, startDate, endDate, notional, strike, freq, (opt));
+        return AmericanOptFactory().createTrade(underlying, startDate, endDate, notional, strike, freq, (opt));
       default:
         std::cerr << "Error: Unknown trade type '" << type << "'" << std::endl;
-        return std::make_unique<AmericanOptFactory>()->createTrade("", Date(0,0,0), Date(0,0,0), 0, 0, 0.0, OptionType::None);
+        return AmericanOptFactory().createTrade("", Date(0,0,0), Date(0,0,0), 0, 0, 0.0, OptionType::None);
   }
 
 }

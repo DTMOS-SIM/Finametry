@@ -9,7 +9,7 @@
 class TradeFactory {
 public:
     virtual std::unique_ptr<Trade> createTrade(std::string underlying, Date start, Date end, double notional, double strike, double freq, OptionType opt) = 0;
-    virtual ~TradeFactory() {} // Virtual destructor for polymorphism
+    virtual ~TradeFactory() = default; // Virtual destructor for polymorphism
 };
 
 // Concrete creator class - SwapFactory
@@ -23,7 +23,7 @@ public:
 // Concrete creator class - BondFactory
 class BondFactory : public TradeFactory {
 public:
-    std::unique_ptr<Trade> createTrade(std::string underlying, Date start, Date end, double notional, double strike, double freq, OptionType opt) {
+    std::unique_ptr<Trade> createTrade(std::string underlying, Date start, Date end, double notional, double strike, double freq, OptionType opt) override {
         return std::make_unique<Bond>(underlying, start, end, notional, strike, freq);// implement this
     }
 };
@@ -31,7 +31,7 @@ public:
 // Concrete creator class - EuropeanFactory
 class EurOptFactory : public TradeFactory {
 public:
-    std::unique_ptr<Trade> createTrade(std::string underlying, Date start, Date end, double notional, double strike, double freq, OptionType opt) {
+    std::unique_ptr<Trade> createTrade(std::string underlying, Date start, Date end, double notional, double strike, double freq, OptionType opt) override {
         return std::make_unique<EuropeanOption>(); //implement this
     }
 };
@@ -39,7 +39,7 @@ public:
 // Concrete creator class - AmericanOptFactory
 class AmericanOptFactory : public TradeFactory {
 public:
-    std::unique_ptr<Trade> createTrade(std::string underlying, Date start, Date end, double notional, double strike, double freq, OptionType opt) {
+    std::unique_ptr<Trade> createTrade(std::string underlying, Date start, Date end, double notional, double strike, double freq, OptionType opt) override {
         return std::make_unique<AmericanOption>(); //implement this
     }
 };
