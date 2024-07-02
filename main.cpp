@@ -85,23 +85,6 @@ int main()
 
     string basePath = "../market_data/";
 
-    // Read and add portfolio
-
-
-
-    // // Read and add bond prices
-    // string bondname;
-    // std::string bondPricePath = basePath + "usd_sofr_20240601.txt";
-    // vector< pair<string, double> >bondData;
-    //
-    // readFromFile(bondPricePath,bondname, bondData);
-    // for (auto& bondPrice : bondData) {
-    //     mkt.addBondPrice(bondPrice.first, bondPrice.second);
-    // }
-
-
-
-
     // Read and add stock prices
     string stockname_1;
     std::string stockPricePath_1 = basePath + "stock_price_20240601.txt";
@@ -121,7 +104,6 @@ int main()
     for (auto& stockPrice : stockData_2) {
         mkt.addStockPrice_2(stockPrice.first, stockPrice.second);
     }
-
 
     // Read and add volatility data
     string volname_1;
@@ -152,9 +134,6 @@ int main()
         volCurve_2.addVol(valueDate + stod(tenorVol.first), tenorVol.second);
     }
     mkt.addVolCurve_2(volname_2, volCurve_2);
-
-
-
 
     // Read and add curve data
     string curvename_1 = "USD-SOFR";
@@ -211,18 +190,6 @@ int main()
     }
     file.close();
 
-  
-
-  auto bond= bFactory->createTrade("usd-gov",Date(2024, 1, 1), Date(2034, 1, 1),1000000, 0.035, 0.6, OptionType::None);
-  auto swap = sFactory->createTrade("usd-sofr",Date(2024, 1, 1), Date(2034, 1, 1),-1000000, 0.03, 1.0, OptionType::None);
-  auto eCall = eFactory->createTrade("appl", Date(2024, 1, 1), Date(2025, 1, 1), 10000, 530, 0,OptionType::Call);
-  auto aPut = aFactory->createTrade("appl", Date(2024, 1, 1), Date(2026, 1, 1), 10000, 525, 0,OptionType::Put);
-
-  myPortfolio.push_back(std::move(bond));
-  myPortfolio.push_back(std::move(swap));
-  myPortfolio.push_back(std::move(eCall));
-  myPortfolio.push_back(std::move(aPut));
-
   //task 3, creat a pricer and price the portfolio, output the pricing result of each deal 
   //3.1 compute the NPV of deal as of market date 1
   //3.2 compute the NPV of deal as of market date 2, and then compute the daily Pnl for each deal uisng NPV(date2) - NPV (date1), and output the result in file
@@ -231,7 +198,6 @@ int main()
       auto& trade = myPortfolio[i];
       double pv = pricer->Price(mkt, std::move(trade));
       cout << pv << endl;
-    //log pv details out in a file
   }
 
   //task 4, compute the Greeks of DV01 [Vector], and Vega risk as of market date 1

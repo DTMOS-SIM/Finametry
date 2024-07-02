@@ -18,10 +18,11 @@ public:
     inline string getType(){ return tradeType; };
     virtual double Pv(const Market& mkt,int mktDataBool) const = 0;
     virtual double Payoff(double s) const = 0;
-    
+    virtual string getName() const = 0;
+
     virtual ~Trade()
     {
-        cout<< "trade base class destructor is called" <<endl;
+        //cout<< "trade base class destructor is called" <<endl;
     };
 
 protected:   

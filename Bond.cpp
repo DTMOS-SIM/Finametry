@@ -31,7 +31,6 @@ double Bond::Pv(const Market& mkt, int mktDataBool) const {
   } else{
     rateCurve = mkt.getCurve_2("USD-SOFR");
   }
-  // auto rateCurve = mkt.getCurve_1("usd-sofr");
 
   for (const auto& cashFlowDate : cashFlows) {
     double df = rateCurve.getDf(cashFlowDate);

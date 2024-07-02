@@ -19,9 +19,10 @@ public:
     /*
     implement this, using npv = discounted cash flow from both leg;
     */
-    double Payoff(double r) const;
-    double Pv(const Market& mkt, int mktDataBool) const;
+    double Payoff(double r) const override;
+    double Pv(const Market& mkt, int mktDataBool) const override;
     double getAnnuity(const Market& mkt, int mktDataBool) const;
+    inline virtual string getName() const override { return underlying; }
  //implement this in a cpp file
     void generateSwapSchedule();
 

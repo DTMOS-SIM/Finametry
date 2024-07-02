@@ -1,7 +1,9 @@
 #ifndef _EUROPEAN_TRADE
 #define _EUROPEAN_TRADE
 
-#include <cassert> 
+#include <cassert>
+#include <algorithm>
+#include <cctype>
 
 #include "TreeProduct.h"
 #include "Payoff.h"
@@ -10,12 +12,14 @@
 class EuropeanOption : public TreeProduct {
 public:
     EuropeanOption(){};
-    EuropeanOption(OptionType _optType, double _strike, const Date& _expiry) :optType(_optType), strike(_strike), expiryDate(_expiry) {};
-    virtual double Payoff(double S) const { return PAYOFF::VanillaOption(optType, strike, S); }
-    virtual const Date& GetExpiry() const { return expiryDate; }
-    virtual double ValueAtNode(double S, double t, double continuation) const { return continuation; }
+    EuropeanOption(OptionType _optType, double _strike, const Date& _expiry, string _underlying) :optType(_optType), strike(_strike), expiryDate(_expiry), underlying(_underlying) {};
+    virtual double Payoff(double S) const override{ return PAYOFF::VanillaOption(optType, strike, S); }
+    virtual const Date& GetExpiry() const override{ return expiryDate; }
+    virtual double ValueAtNode(double S, double t, double continuation) const override{ return continuation; }
+    inline virtual string getName() const override { return underlying; }
 
 protected:
+    string underlying;
     OptionType optType;
     double strike;
     Date expiryDate;

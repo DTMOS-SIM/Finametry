@@ -11,9 +11,10 @@ public:
         startDate = start;
         maturityDate = end;
     }
-    double Payoff(double s) const; // implement this
-    double Pv(const Market& mkt, int mktDataBool) const; // implement this
+    double Payoff(double s) const override; // implement this
+    double Pv(const Market& mkt, int mktDataBool) const override; // implement this
     void generateBondSchedule(vector<Date>& cashFlows) const; //implement this
+    inline virtual string getName() const override { return underlying; }
 
 private:
     std::string underlying;

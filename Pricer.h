@@ -15,7 +15,7 @@ public:
   virtual double Price(const Market& mkt, std::unique_ptr<Trade> trade);
 
 private:
-  virtual double PriceTree(const Market& mkt, const TreeProduct& trade) { return 0; };
+  virtual double PriceTree(const Market& mkt, const TreeProduct& trade, const int& marketDataBool) { return 0; };
 };
 
 class BinomialTreePricer: public Pricer
@@ -25,7 +25,7 @@ public:
     nTimeSteps = N;
     states.resize(N+1);
   }
-  double PriceTree(const Market& mkt, const TreeProduct& trade) override;
+  double PriceTree(const Market& mkt, const TreeProduct& trade, const int& marketDataBool) override;
   
 protected:
   virtual void ModelSetup(double S0, double sigma, double rate, double dt) = 0; // pure virtual
