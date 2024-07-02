@@ -13,7 +13,7 @@ public:
         tradeRate = _rate;
         frequency = _freq;
         // below function is causing infinite loop while adding trades to portfolio when uncommented
-        // generateSwapSchedule();
+        generateSwapSchedule();
     }
     
     /*

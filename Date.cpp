@@ -143,8 +143,10 @@ Date dateAddTenor(const Date& start, const string& tenorStr)
     newdate.year += numUnit;
   }
   else
+  {
     throw std::runtime_error("Error: found unsupported tenor: "+ tenorStr);
-  
+  }
+
   return newdate;
 }
 

@@ -4,25 +4,13 @@
 
 void Swap::generateSwapSchedule()
 {
-  if (startDate == maturityDate || frequency <= 0 || frequency > 1)
-        throw std::runtime_error("Error: start date is later than end date, or invalid frequency!");
-    
-    string tenorStr;
-    if (frequency == 0.25)
-      tenorStr="3M";
-    else if (frequency == 0.5) 
-      tenorStr="6M";
-    else
-      tenorStr="1Y";
-    
-    Date seed = startDate;
-    while(seed < maturityDate){
-        swapSchedule.push_back(seed);
-        seed=dateAddTenor(seed, tenorStr);
-    }
-    swapSchedule.push_back(maturityDate);
-    if (swapSchedule.size()<2)
-        throw std::runtime_error("Error: invalid schedule, check input!");
+  Date paymentDate = startDate;
+  while (paymentDate < maturityDate) {
+    paymentDate = paymentDate + frequency;
+    swapSchedule.push_back(paymentDate);
+  }
+  // Ensure the final maturity date is included
+  swapSchedule.push_back(maturityDate);
 
 }
 
@@ -51,7 +39,7 @@ double Swap::Pv(const Market& mkt, int mktDataBool) const {
   auto thisMkt = const_cast<Market&>(mkt);
   double fixPv = 0;
 
-  RateCurve rateCurve = (mktDataBool == 1) ? mkt.getCurve_1("usd-sofr") : mkt.getCurve_2("usd-sofr");
+  RateCurve rateCurve = (mktDataBool == 1) ? mkt.getCurve_1("USD-SOFR") : mkt.getCurve_2("USD-SOFR");
   double df = rateCurve.getDf(maturityDate);
   double fltPv = (-notional + notional * df);
 
