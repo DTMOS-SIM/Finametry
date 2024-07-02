@@ -77,8 +77,15 @@ double RateCurve::getRate(Date tenor) const {
 
 double RateCurve::getDf(Date _date) const
 {
+  std::time_t n = std::time(nullptr);
+  auto now_ = std::localtime(&n);
+  Date valueDate;
+  valueDate.year = now_->tm_year + 1900;
+  valueDate.month = now_->tm_mon + 1;
+  valueDate.day = now_->tm_mday;
+
   double ccr = getRate(_date);
-  double t = _date - _asOf;
+  double t = _date - valueDate;
   return exp(-ccr * t);
 }
 

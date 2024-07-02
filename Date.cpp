@@ -75,6 +75,15 @@ bool operator<(const Date& d1, const Date& d2)
     return false;
 };
 
+bool operator<=(const Date& d1, const Date& d2)
+{
+  return (d1 - d2) <= 0;
+}
+bool operator>=(const Date& d1, const Date& d2)
+{
+  return (d1 - d2) >= 0;
+}
+
 bool operator==(const Date& d1, const Date& d2)
 {
   double gap = d1 - d2;
@@ -83,6 +92,11 @@ bool operator==(const Date& d1, const Date& d2)
   else
     return false;
 };
+
+bool operator!=(const Date& d1, const Date& d2)
+{
+  return (d1 - d2) != 0;
+}
 
 std::ostream& operator<<(std::ostream& os, const Date& d)
 {

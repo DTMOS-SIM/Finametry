@@ -73,9 +73,12 @@ public:
   std::unique_ptr<Trade> addPortfolio(const std::string& line);
   double getMarketPrice() const;
   
-  inline RateCurve getCurve(const string& name) const { return curves_1.at(name); };
-  inline VolCurve getVolCurve(const string& name) const { return vols_1.at(name); };
-  inline double getStockPrice(const string& name) const { return stockPrices_1.at(name); };
+  inline RateCurve getCurve_1(const string& name) const { return curves_1.at(name); };
+  inline RateCurve getCurve_2(const string& name) const { return curves_2.at(name); };
+  inline VolCurve getVolCurve_1(const string& name) const { return vols_1.at(name); };
+  inline VolCurve getVolCurve_2(const string& name) const { return vols_2.at(name); };
+  inline double getStockPrice_1(const string& name) const { return stockPrices_1.at(name); };
+  inline double getStockPrice_2(const string& name) const { return stockPrices_2.at(name); };
   // inline double getBondPrice(const string& name) const { return bondPrices_1.at(name); };
 
 private:

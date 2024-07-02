@@ -4,17 +4,27 @@
 
 double Pricer::Price(const Market& mkt, std::unique_ptr<Trade> trade) 
 {
-  double pv;
+  double pv_1 = 0.0;
+  double pv_2 = 0.0;
+  double PnL = 0.0;
   if (trade->getType() == "TreeProduct") {
     auto treePtr = dynamic_cast<TreeProduct*>(trade.get());
     if (treePtr) { //check if cast is sucessful
-      pv = PriceTree(mkt, *treePtr);
+      pv_1 = PriceTree(mkt, *treePtr);
     }
   }
-  else{
-    pv = trade->Pv(mkt);
+  else if (trade->getType() == "BondTrade")
+    {
+    pv_1 = trade->Pv(mkt,1);
+    pv_2 = trade->Pv(mkt,2);
+    PnL = pv_2 - pv_1;
+  }else if (trade->getType() == "SwapTrade")
+  {
+    pv_1 = trade->Pv(mkt,1);
+    pv_2 = trade->Pv(mkt,2);
+    PnL = pv_2 - pv_1;
   }
-  return pv;
+  return PnL;
 }
 
 double BinomialTreePricer::PriceTree(const Market& mkt, const TreeProduct& trade)

@@ -12,8 +12,8 @@ public:
         maturityDate = end;
     }
     double Payoff(double s) const; // implement this
-    double Pv(const Market& mkt) const; // implement this
-    void generateSwapSchedule(); //implement this
+    double Pv(const Market& mkt, int mktDataBool) const; // implement this
+    void generateBondSchedule(vector<Date>& cashFlows) const; //implement this
 
 private:
     std::string underlying;
@@ -24,6 +24,6 @@ private:
 
     Date startDate;
     Date maturityDate;
-    vector<Date> bondSchedule;
+    vector<Date> cashFlows;
 
 };

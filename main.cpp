@@ -157,7 +157,7 @@ int main()
 
 
     // Read and add curve data
-    string curvename_1;
+    string curvename_1 = "USD-SOFR";
     std::string curvePath_1 = basePath + "usd_sofr_20240601.txt";
     vector< pair<string, double> >curveData_1;
 
@@ -169,7 +169,7 @@ int main()
     mkt.addCurve_1(curvename_1, usdSofr_1);
 
     // Read and add curve data
-    string curvename_2;
+    string curvename_2 = "USD-SOFR";
     std::string curvePath_2 = basePath + "usd_sofr_20240602.txt";
     vector< pair<string, double> >curveData_2;
 
@@ -226,12 +226,13 @@ int main()
   //task 3, creat a pricer and price the portfolio, output the pricing result of each deal 
   //3.1 compute the NPV of deal as of market date 1
   //3.2 compute the NPV of deal as of market date 2, and then compute the daily Pnl for each deal uisng NPV(date2) - NPV (date1), and output the result in file
-  // auto pricer = new CRRBinomialTreePricer(100);
-  // for (size_t i = 0; i<myPortfolio.size(); i++) {
-  //   auto& trade = myPortfolio[i];
-  //   double pv = pricer->Price(mkt, std::move(trade));
-  //   //log pv details out in a file
-  // }
+  auto pricer = new CRRBinomialTreePricer(100);
+  for (size_t i = 0; i<myPortfolio.size(); i++) {
+      auto& trade = myPortfolio[i];
+      double pv = pricer->Price(mkt, std::move(trade));
+      cout << pv << endl;
+    //log pv details out in a file
+  }
 
   //task 4, compute the Greeks of DV01 [Vector], and Vega risk as of market date 1
   // 4.1 compute risk using risk engine

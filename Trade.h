@@ -16,7 +16,7 @@ public:
     };
 
     inline string getType(){ return tradeType; };
-    virtual double Pv(const Market& mkt) const = 0;
+    virtual double Pv(const Market& mkt,int mktDataBool) const = 0;
     virtual double Payoff(double s) const = 0;
     
     virtual ~Trade()

@@ -1,5 +1,6 @@
 #include "Swap.h"
 #include "Market.h"
+#include <cmath>
 
 void Swap::generateSwapSchedule()
 {
@@ -25,27 +26,36 @@ void Swap::generateSwapSchedule()
 
 }
 
-double Swap::Payoff(double s) const 
-{
-  //this is using annutiy to compute pv
-  return (s - tradeRate) * getAnnuity();
+double Swap::Payoff(double s) const {
+  return 0.0; // Use market data set 1 for now
 }
 
-double Swap::getAnnuity() const 
-{
-  return 0;
+//not being used at all anywhere???
+double Swap::getAnnuity(const Market& mkt, int mktDataBool) const {
+  std::vector<Date> payments = swapSchedule;
+  double sumDiscFacts = 0.0;
+  RateCurve rateCurve = (mktDataBool == 1) ? mkt.getCurve_1("usd-sofr") : mkt.getCurve_2("usd-sofr");
+
+  for (const Date& day : payments) {
+    if (day >= mkt.asOf) {
+      double r = rateCurve.getRate(day);
+      double t = day - mkt.asOf;
+      sumDiscFacts += (exp(-(r * t)) * frequency);
+    }
+  }
+
+  return notional * sumDiscFacts;
 }
 
-double Swap::Pv(const Market& mkt) const
-{
-  //using cash flow discunting
+double Swap::Pv(const Market& mkt, int mktDataBool) const {
   auto thisMkt = const_cast<Market&>(mkt);
   double fixPv = 0;
 
-  auto rateCurve = thisMkt.getCurve("usd-sofr");
+  RateCurve rateCurve = (mktDataBool == 1) ? mkt.getCurve_1("usd-sofr") : mkt.getCurve_2("usd-sofr");
   double df = rateCurve.getDf(maturityDate);
   double fltPv = (-notional + notional * df);
-  for (auto& dt: swapSchedule) {
+
+  for (const auto& dt : swapSchedule) {
     if (dt == startDate)
       continue;
     double tau = dt - startDate;

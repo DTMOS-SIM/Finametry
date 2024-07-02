@@ -20,8 +20,9 @@ public:
     implement this, using npv = discounted cash flow from both leg;
     */
     double Payoff(double r) const;
-    double Pv(const Market& mkt) const; 
-    double getAnnuity() const; //implement this in a cpp file
+    double Pv(const Market& mkt, int mktDataBool) const;
+    double getAnnuity(const Market& mkt, int mktDataBool) const;
+ //implement this in a cpp file
     void generateSwapSchedule();
 
 private:

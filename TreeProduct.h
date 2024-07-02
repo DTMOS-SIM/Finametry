@@ -10,7 +10,7 @@ public:
     TreeProduct(): Trade() { tradeType = "TreeProduct";};
     virtual const Date& GetExpiry() const = 0;
     virtual double ValueAtNode(double stockPrice, double t, double continuationValue) const = 0;
-    double Pv(const Market& mkt) const { return 0; }; //provide behaviour but not use this
+    double Pv(const Market& mkt, int mktDataBool) const { return 0; }; //provide behaviour but not use this
 };
 
 #endif
