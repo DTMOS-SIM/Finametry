@@ -150,6 +150,18 @@ Date dateAddTenor(const Date& start, const string& tenorStr)
   return newdate;
 }
 
+string datetostring(const Date& date)
+{
+  string datestr;
+  string year = std::to_string(date.year);
+  string month = std::to_string(date.month);
+  string day = std::to_string(date.day);
+
+  datestr = year + " " + month + " " + day;
+
+  return datestr;
+}
+
 Date stringToDate(const std::string& DateStr)
 {
   // cout << "triggered date conversion" << endl;

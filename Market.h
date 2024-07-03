@@ -23,6 +23,8 @@ public:
   
   std::string name;
   Date _asOf;//same as market data date
+  inline vector<Date> getTenors() { return tenors;}
+  inline vector<double> getRates() { return rates;}
 
 private:
   vector<Date> tenors;
@@ -37,6 +39,8 @@ public:
   void addVol(const Date& tenor,const double& rate); // implement this
   double getVol(Date tenor) const; //implement this function using linear interpolation
   void display() const; //implement this
+  inline vector<Date> getTenors() { return tenors;}
+  inline vector<double> getRates() { return vols;}
 
   
   string name;

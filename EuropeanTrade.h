@@ -15,6 +15,8 @@ public:
     EuropeanOption(OptionType _optType, double _strike, const Date& _expiry, string _underlying) :optType(_optType), strike(_strike), expiryDate(_expiry), underlying(_underlying) {};
     virtual double Payoff(double S) const override{ return PAYOFF::VanillaOption(optType, strike, S); }
     virtual const Date& GetExpiry() const override{ return expiryDate; }
+    virtual double GetPrice() const {return strike;}
+    virtual string GetNotional() const override {return "not applicable";}
     virtual double ValueAtNode(double S, double t, double continuation) const override{ return continuation; }
     inline virtual string getName() const override { return underlying; }
 

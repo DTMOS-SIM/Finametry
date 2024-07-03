@@ -15,6 +15,9 @@ public:
     double Pv(const Market& mkt, int mktDataBool) const override; // implement this
     void generateBondSchedule(vector<Date>& cashFlows) const; //implement this
     inline virtual string getName() const override { return underlying; }
+    double GetPrice() const override { return tradePrice;}
+    string GetNotional() const override {return std::to_string(notional);}
+    inline const Date& GetExpiry() const override { return maturityDate; }
 
 private:
     std::string underlying;

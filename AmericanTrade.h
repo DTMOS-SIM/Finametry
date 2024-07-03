@@ -21,6 +21,16 @@ public:
   { 
     return expiryDate;
   }
+  virtual double GetPrice() const
+  {
+    return strike;
+  }
+
+  virtual string GetNotional() const override
+  {
+    return "not applicable";
+  }
+
   virtual double ValueAtNode(double S, double t, double continuation) const override
   { 
     return std::max(Payoff(S), continuation); 

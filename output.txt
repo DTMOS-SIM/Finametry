@@ -1,0 +1,13 @@
+tradeType         tradeName      tradeExpiry    price/strike/rate   Notional       pv             
+BondTrade         usd-gov        2034 6 1       0.00                1000000.00     	3352.06        
+BondTrade         usd-gov        2044 6 1       0.00                -500000.00     	-2761.65       
+SwapTrade         usd-sofr       2034 6 1       0.04                -1000000.00    	-6005.52       
+SwapTrade         usd-sofr       2030 6 1       0.04                2000000.00     	-2337.44       
+SwapTrade         usd-sofr       2030 6 1       0.03                5000000.00     	-3560.02       
+SwapTrade         usd-sofr       2032 6 1       0.04                1000000.00     	-90.76         
+TreeProduct       APPL           2026 6 1       655.00              Not Applicable 	-5.74          
+TreeProduct       SP500          2026 6 1       5020.00             Not Applicable 	-2.72          
+TreeProduct       STI            2026 6 1       3400.00             Not Applicable 	-18.87         
+TreeProduct       APPL           2026 6 1       645.00              Not Applicable 	1.60           
+TreeProduct       SP500          2027 6 1       5000.00             Not Applicable 	-14.20         
+TreeProduct       STI            2028 6 1       3500.00             Not Applicable 	-2.14          

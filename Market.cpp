@@ -14,7 +14,14 @@ using namespace std;
 
 void RateCurve::shock(Date tenor, double value)
 {
-  //complete
+  double total_rate = 0.0;
+  for (int index = 0; index < tenors.size(); index++)
+  {
+    if (tenors[index] == tenor)
+    {
+      rates.at(index) = getRate(tenor) + value;
+    }
+  }
 }
 
 
@@ -106,7 +113,14 @@ Next class
 
 void VolCurve::shock(Date tenor, double value)
 {
-  // complete
+  double total_rate = 0.0;
+  for (int index = 0; index < tenors.size(); index++)
+  {
+    if (tenors[index] == tenor)
+    {
+      vols.at(index) = getVol(tenor) + value;
+    }
+  }
 }
 
 void VolCurve::addVol(const Date& tenor, const double& vol) {

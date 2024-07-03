@@ -22,7 +22,11 @@ public:
     double Payoff(double r) const override;
     double Pv(const Market& mkt, int mktDataBool) const override;
     double getAnnuity(const Market& mkt, int mktDataBool) const;
+    double GetPrice() const override { return tradeRate;}
+    string GetNotional() const override { return std::to_string(notional);}
     inline virtual string getName() const override { return underlying; }
+    inline const Date& GetExpiry() const override { return maturityDate; }
+
  //implement this in a cpp file
     void generateSwapSchedule();
 

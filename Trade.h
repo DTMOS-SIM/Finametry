@@ -19,6 +19,9 @@ public:
     virtual double Pv(const Market& mkt,int mktDataBool) const = 0;
     virtual double Payoff(double s) const = 0;
     virtual string getName() const = 0;
+    virtual double GetPrice() const = 0;
+    virtual string GetNotional() const = 0;
+    virtual const Date& GetExpiry() const = 0;
 
     virtual ~Trade()
     {

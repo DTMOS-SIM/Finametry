@@ -1,6 +1,8 @@
 #include <fstream>
 #include <ctime>
 #include <chrono>
+#include <iomanip>
+#include <iostream>
 #include <regex>
 
 #include "Market.h"
@@ -63,6 +65,43 @@ void readFromFile(const string& fileName, string& title, vector< pair<string, do
         }
     }
     MyReadFile.close();
+}
+
+
+std::string truncateString(const std::string& str, size_t maxWidth) {
+    if (str.length() > maxWidth) {
+        return str.substr(0, maxWidth);
+    }
+    return str;
+}
+
+
+string formatDouble(double value, int precision = 2) {
+    std::ostringstream out;
+    out.precision(precision);
+    out << std::fixed << value;
+    if (value == -1234.0)
+    {
+        return "Not Applicable";
+    }
+
+    return out.str();
+}
+
+double safeStod(const std::string& str) {
+    if (str.empty() || str == "not applicable") {
+        // std::cerr << "Warning: Invalid input '" << str << "' treated as 0.\n";
+        return -1234.0; // Default value for non-numeric notional
+    }
+    try {
+        return std::stod(str);
+    } catch (const std::invalid_argument& e) {
+        // std::cerr << "Invalid argument: '" << str << "' could not be converted to double. Error: " << e.what() << std::endl;
+        return 0.0; // Default value
+    } catch (const std::out_of_range& e) {
+        // std::cerr << "Out of range: '" << str << "' is out of range for a double. Error: " << e.what() << std::endl;
+        return 0.0; // Default value
+    }
 }
 
 int main()
@@ -194,10 +233,57 @@ int main()
   //3.1 compute the NPV of deal as of market date 1
   //3.2 compute the NPV of deal as of market date 2, and then compute the daily Pnl for each deal uisng NPV(date2) - NPV (date1), and output the result in file
   auto pricer = new CRRBinomialTreePricer(100);
-  for (size_t i = 0; i<myPortfolio.size(); i++) {
-      auto& trade = myPortfolio[i];
-      double pv = pricer->Price(mkt, std::move(trade));
-      cout << pv << endl;
+
+    // uncomment for output file creation
+    std::ofstream outputFile( "../output.txt");
+
+    if (!outputFile) {
+        std::cerr << "Unable to open file";
+        return 1;
+    }
+
+    // Set column widths
+    const int tradeTypeWidth = 18;
+    const int tradeNameWidth = 15;
+    const int tradeExpiryWidth = 15;
+    const int tradePriceWidth = 20;
+    const int tradeNotionalWidth = 15;
+    const int pvWidth = 15;
+
+    // Write headers with fixed width
+    outputFile << std::left
+        << std::setw(tradeTypeWidth) << "tradeType"
+        << std::setw(tradeNameWidth) << "tradeName"
+        << std::setw(tradeExpiryWidth) << "tradeExpiry"
+        << std::setw(tradePriceWidth) << "price/strike/rate"
+        << std::setw(tradeNotionalWidth) << "Notional"
+        << std::setw(pvWidth) << "pv"
+        << '\n';
+
+    for (size_t i = 0; i<myPortfolio.size(); i++) {
+        auto& trade = myPortfolio[i];
+
+        std::string tradeName = truncateString(trade->getName(), tradeNameWidth - 1); // Truncate to fit
+        std::string tradeType = truncateString(trade->getType(), tradeTypeWidth - 1);
+        std::string tradePrice = formatDouble(trade->GetPrice(), 2); // Format with 2 decimal places
+        std::string notional = formatDouble(safeStod(trade->GetNotional()), 2); // Convert and format notional
+        cout <<tradeName<<tradeType<<tradePrice<<notional<<endl;
+
+        outputFile << std::left
+        << std::setw(tradeTypeWidth) << tradeType
+        << std::setw(tradeNameWidth) << tradeName
+        << std::setw(tradeExpiryWidth) << datetostring(trade->GetExpiry())
+        << std::setw(tradePriceWidth) << tradePrice
+        << std::setw(tradeNotionalWidth) << notional
+        << '\t';
+
+        double pv = pricer->Price(mkt, std::move(trade));
+
+        outputFile << std::left
+        << std::setw(pvWidth) << formatDouble(pv, 2)
+        << '\n';
+
+        cout << pv << endl;
   }
 
   //task 4, compute the Greeks of DV01 [Vector], and Vega risk as of market date 1
